@@ -74,8 +74,6 @@ import de.hu_berlin.german.korpling.saltnpepper.salt.saltCore.SElementId;
  * @version 1.0
  *
  */
-// TODO change the name of the component, for example use the format name and
-// the ending Importer (FORMATImporterComponent)
 @Component(name = "GATEImporterComponent", factory = "PepperImporterComponentFactory")
 public class GateImporter extends PepperImporterImpl implements PepperImporter
 {
@@ -99,7 +97,7 @@ public class GateImporter extends PepperImporterImpl implements PepperImporter
 	/**
 	 * <strong>OVERRIDE THIS METHOD FOR CUSTOMIZATION</strong> <br/>
 	 * This method creates a customized {@link PepperMapper} object and returns
-	 * it. You can here do some additional initialisations. Thinks like setting
+	 * it. You can here do some additional initializations. Thinks like setting
 	 * the {@link SElementId} of the {@link SDocument} or {@link SCorpus} object
 	 * and the {@link URI} resource is done by the framework (or more in detail
 	 * in method {@link #start()}).<br/>
@@ -125,7 +123,7 @@ public class GateImporter extends PepperImporterImpl implements PepperImporter
 	{
 		GateMapper mapper = new GateMapper();
 		/**
-		 * TODO Set the exact resource, which should be processed by the created
+		 * Set the exact resource, which should be processed by the created
 		 * mapper object, if the default mechanism of importCorpusStructure()
 		 * was used, the resource could be retrieved by
 		 * getSElementId2ResourceTable().get(sElementId), just uncomment this
@@ -150,7 +148,7 @@ public class GateImporter extends PepperImporterImpl implements PepperImporter
 	@Override
 	public Double isImportable(URI corpusPath)
 	{
-		// TODO some code to analyze the given corpus-structure
+		// some code to analyze the given corpus-structure
 		return (null);
 	}
 
@@ -172,7 +170,7 @@ public class GateImporter extends PepperImporterImpl implements PepperImporter
 	@Override
 	public boolean isReadyToStart() throws PepperModuleNotReadyException
 	{
-		// TODO make some initializations if necessary
+		// make some initializations if necessary
 		return (super.isReadyToStart());
 	}
 }

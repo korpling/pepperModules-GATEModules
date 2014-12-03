@@ -91,7 +91,6 @@ public class GateMapper extends PepperMapperImpl
 		// this dummy implementation the resource is null
 		logger.debug("Importing the file {}.", resource);
 		
-		//TODO set progress
 		try
 		{	
 			SAXParserFactory factory = SAXParserFactory.newInstance();
@@ -117,32 +116,36 @@ public class GateMapper extends PepperMapperImpl
 				{
 					System.out.println("Start Element: " + qName);
 
-					if (qName.equalsIgnoreCase("TextWithNodes"))
+					if ("TextWithNodes".equals(qName))
 					{
 						btext = true;
 					}
-					else if (qName.equalsIgnoreCase("AnnotationSet")) 
+					else if ("AnnotationSet".equals(qName)) 
 					{
 						bas=true;
 						if(attributes.getLength()>0)
 						{
-							if (attributes.getQName(0).equalsIgnoreCase("Name"))
+							if ("Name".equals(attributes.getQName(0)))
 							{
 								as_name=attributes.getValue(0);
 							}
 						}
+						else
+						{
+							as_name="Default";
+						}
 					}
-					else if (qName.equalsIgnoreCase("Annotation")) 
+					else if ("Annotation".equals(qName)) 
 					{
 						banno=true;
 
 						for(short i=0;i<attributes.getLength();i++)
 						{
-							if(attributes.getQName(i).equalsIgnoreCase("Type"))
+							if("Type".equals(attributes.getQName(i)))
 							{
 								a_name=attributes.getValue(i);
 							}
-							else if (attributes.getQName(i).equalsIgnoreCase("StartNode"))
+							else if ("StartNode".equals(attributes.getQName(i)))
 							{
 								try
 								{
@@ -150,10 +153,10 @@ public class GateMapper extends PepperMapperImpl
 								} catch (NumberFormatException e)
 								{
 									logger.error("NumberFormatException in Annotation "+a_name+" at: "+attributes.getValue(i));
-									e.printStackTrace();  //TODO Flo fragen wie sich pst verhaelt
+									//e.printStackTrace(); 
 								}
 							} 
-							else if (attributes.getQName(i).equalsIgnoreCase("EndNode"))
+							else if ("EndNode".equals(attributes.getQName(i)))
 							{
 								try
 								{
@@ -161,14 +164,13 @@ public class GateMapper extends PepperMapperImpl
 								} catch (NumberFormatException e)
 								{
 									logger.error("NumberFormatException in Annotation "+a_name+" at: "+attributes.getValue(i));
-									e.printStackTrace();
 								}
 							} 
-							else if (attributes.getQName(i).equalsIgnoreCase("Id"))
-							{
-								//TODO id gebraucht?
-								//id=attributes.getValue(i);
-							}
+//							else if (attributes.getQName(i).equalsIgnoreCase("Id"))
+//							{
+//								//TODO id gebraucht?
+//								//id=attributes.getValue(i);
+//							}
 						}
 						//generate spans
 //						EList<SToken> token_set = new BasicEList<SToken>();
@@ -185,20 +187,20 @@ public class GateMapper extends PepperMapperImpl
 //						topic.createSAnnotation(null, a_name, "wert aus features?");
 
 					}
-					else if (qName.equalsIgnoreCase("GateDocument"))
+					else if ("GateDocument".equals(qName))
 					{
 						System.out.println(attributes.getQName(0));
 						System.out.println(attributes.getValue(0));
-						if (attributes.getQName(0).equalsIgnoreCase("version"))
+						if ("version".equals(attributes.getQName(0)))
 						{
-							if (!attributes.getValue(0).equalsIgnoreCase("3"))
+							if (!"3".equals(attributes.getValue(0)))
 							{
 								logger.warn("This Module works for GATE_Document Version 3. Anyway still trying...");
 							}
 						}
 						addProgress(0.05);
 					}
-					else if (qName.equalsIgnoreCase("Node"))
+					else if ("Node".equals(qName))
 					{
 						if(attributes.getLength()>0){nodeID = attributes.getValue(0).trim();}
 						else{logger.error("Node has no attribute");	}
@@ -209,27 +211,18 @@ public class GateMapper extends PepperMapperImpl
 						} catch (NumberFormatException e)
 						{
 							logger.error("NumberFormatException at Node: "+attributes.getValue(0));
-							e.printStackTrace();
 						}
 						System.out.println(nodeID);
 					}
-					else if (qName.equalsIgnoreCase("Name"))
+					else if ("Name".equals(qName))
 					{
-						//System.out.println("inName");
-						if(banno | bgatedocfeat)
-						{
-							//System.out.println("inNamebas");
-							bname=true;
-						}
+						if(banno | bgatedocfeat){bname=true;}
 					}
-					else if (qName.equalsIgnoreCase("Value"))
+					else if ("Value".equals(qName))
 					{
-						if(banno | bgatedocfeat)
-						{
-							bvalue=true;
-						}
+						if(banno | bgatedocfeat){bvalue=true;}
 					}
-					else if (qName.equalsIgnoreCase("GateDocumentFeatures"))
+					else if ("GateDocumentFeatures".equals(qName))
 					{
 						bgatedocfeat=true;
 					}
@@ -239,12 +232,12 @@ public class GateMapper extends PepperMapperImpl
 				{
 
 					System.out.println("End Element: " + qName);
-					if (qName.equalsIgnoreCase("TextWithNodes"))
+					if ("TextWithNodes".equals(qName))
 					{
 						btext = false;
 						//generate Salttext
 						sText= getSDocument().getSDocumentGraph().createSTextualDS(text);
-						//TODO text=null speicher opt
+						text=null; //saving memory
 						//System.out.println(text);
 
 						//generate Salttokens
@@ -254,7 +247,6 @@ public class GateMapper extends PepperMapperImpl
 							int act_val=nodeID;
 							if(pos>-1)
 							{
-								//no long in SToken
 								SToken token = getSDocument().getSDocumentGraph().createSToken(sText, pos, act_val);
 								tokenIDs.put(pos, token);
 							}
@@ -268,12 +260,12 @@ public class GateMapper extends PepperMapperImpl
 //							tokenIDs.put(ele.getKey(), token);
 //						}
 					}
-					else if (qName.equalsIgnoreCase("AnnotationSet")) 
+					else if ("AnnotationSet".equals(qName)) 
 					{
 						bas=false;
 						addProgress(0.05); //can have infinite amount of AS but better to give some feedback to the user
 					}
-					else if (qName.equalsIgnoreCase("Annotation")) 
+					else if ("Annotation".equals(qName)) 
 					{
 						//generate Spans with features as bar name
 						EList<SToken> token_set = new BasicEList<SToken>();
@@ -305,7 +297,7 @@ public class GateMapper extends PepperMapperImpl
 						featurepairs.clear();
 						banno=false;
 					}
-					else if (qName.equalsIgnoreCase("Feature")) 
+					else if ("Feature".equals(qName)) 
 					{
 						if(name!="" & value!="")
 						{
@@ -322,7 +314,7 @@ public class GateMapper extends PepperMapperImpl
 							value="";
 						}
 					}
-					else if (qName.equalsIgnoreCase("GateDocumentFeatures")) 
+					else if ("GateDocumentFeatures".equals(qName)) 
 					{
 						bgatedocfeat=false;
 					}
@@ -365,10 +357,7 @@ public class GateMapper extends PepperMapperImpl
   	    is.setEncoding("UTF-8");
 		saxParser.parse(is, handler);
 		
-		} catch (Exception e)
-		{
-			e.printStackTrace();
-		}
+		} catch (Exception e){logger.error("XML-Parser Error: "+ e);}
 		setProgress(1.0);
 		
 		System.out.println(text);
