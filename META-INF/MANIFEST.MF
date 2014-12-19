@@ -1,6 +1,6 @@
 Manifest-Version: 1.0
-Bnd-LastModified: 1417533968436
-Build-Jdk: 1.7.0_55
+Bnd-LastModified: 1418987269277
+Build-Jdk: 1.7.0_65
 Built-By: florian
 Bundle-Description: This project provides three sample modules for Peppe
  r. It provides an importer, an exporter and a manipulator. The project 
@@ -8,11 +8,11 @@ Bundle-Description: This project provides three sample modules for Peppe
  e to override the areas marked with TODO.
 Bundle-License: http://www.apache.org/licenses/LICENSE-2.0.txt
 Bundle-ManifestVersion: 2
-Bundle-Name: pepperModules-SampleModules
+Bundle-Name: pepperModules-GATEModules
 Bundle-RequiredExecutionEnvironment: JavaSE-1.7
 Bundle-SymbolicName: de.hu_berlin.german.korpling.saltnpepper.pepperModu
- les-SampleModules;singleton:=true
-Bundle-Vendor: Humboldt Univerity of Berlin, INRIA
+ les-GATEModules;singleton:=true
+Bundle-Vendor: Humboldt-Universität zu Berlin
 Bundle-Version: 2.0.1.SNAPSHOT
 Created-By: Apache Maven Bundle Plugin
 META-INF: /home/florian/work/SaltNPepper/workspace/pepperModules/pepperM
