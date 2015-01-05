@@ -61,8 +61,7 @@ import org.xml.sax.helpers.DefaultHandler;
 
 public class GateMapper extends PepperMapperImpl
 {
-	// this is a logger, for recording messages during program process, like
-	// debug messages
+	// this is a logger, for recording messages during program process, like debug messages
 	private static final Logger logger = LoggerFactory.getLogger(GateImporter.class);
 	protected String text;
 	STextualDS sText= null; //Salttext
