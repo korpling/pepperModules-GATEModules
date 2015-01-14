@@ -52,11 +52,6 @@
   <organization>
   	<name>Humboldt-Universität zu Berlin</name>
   </organization>
-  <scm>
-    <!-- TODO /9/ change the connection to the trunk folder of your scm, what you can see here is the subversion connection for the pepperModules-SampleModules project -->
-    <developerConnection>scm:svn:https://korpling.german.hu-berlin.de/svn/saltnpepper/PepperModules/SampleModules/trunk</developerConnection>
-    <url>scm:svn:https://korpling.german.hu-berlin.de/svn/saltnpepper/PepperModules/SampleModules/</url>
-  </scm>
  
   <dependencies>
     <!-- TODO /10/ ... put here all the dependencies you need, which are not already included in the parent project...-->
@@ -68,10 +63,6 @@
         <artifactId>maven-release-plugin</artifactId>
         <version>${maven-release-plugin.version}</version>
         <configuration>
-          <tagBase>
-          <!-- TODO /11/ change the connection to the tags folder of your scm, what you can see here is the subversion connection for the pepperModules-SampleModules project -->
-           https://korpling.german.hu-berlin.de/svn/saltnpepper/PepperModules/SampleModules/tags/
-          </tagBase>
           <releaseProfiles>release</releaseProfiles>
           <goals>package assembly:single deploy</goals>
         </configuration>
