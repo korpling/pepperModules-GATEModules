@@ -128,7 +128,6 @@ public class GateMapper extends PepperMapperImpl
 		// to get the exact resource, which be processed now, call
 		// getResources()
 		URI resource = getResourceURI();
-		System.out.println(resource);
 		// we record, which file currently is imported to the debug stream
 		logger.debug("Importing the file {}.", resource);
 		
@@ -219,6 +218,7 @@ public class GateMapper extends PepperMapperImpl
 					}
 					else if (Node_TAG.equals(qName))
 					{
+
 						if(attributes.getLength()>0){nodeID = attributes.getValue(0).trim();}
 						else{logger.error("Node has no attribute");	}
 						
@@ -249,7 +249,7 @@ public class GateMapper extends PepperMapperImpl
 						//generate Salttext
 						sText= getSDocument().getSDocumentGraph().createSTextualDS(text);
 						text=null; //saving memory
-						System.out.println(text);
+						
 						//generate Salttokens
 						int pos=-1;
 						for(Integer nodeID : nodeIDs)
@@ -275,9 +275,12 @@ public class GateMapper extends PepperMapperImpl
 						EList<SToken> token_set = new BasicEList<SToken>();
 						for(Integer ele : nodeIDs)
 						{
-							if(ele >= a_start & ele<=a_end)
+							if(ele >= a_start & ele<=a_end) //filter EndNotes
 							{
-								token_set.add(tokenIDs.get(ele));
+								if(tokenIDs.containsKey(ele))
+								{
+									token_set.add(tokenIDs.get(ele));
+								}
 							}
 							if(ele>a_end){break;}
 						}
@@ -294,8 +297,12 @@ public class GateMapper extends PepperMapperImpl
 							}
 							afeatures=afeatures.substring(0, afeatures.length()-1);
 						}
-						SSpan topic = getSDocument().getSDocumentGraph().createSSpan(token_set);
-						topic.createSAnnotation(null, a_name, afeatures);
+
+						if(token_set.size()>0) //in case token span is < 1
+						{
+							SSpan topic = getSDocument().getSDocumentGraph().createSSpan(token_set);
+							topic.createSAnnotation(null, a_name, afeatures);
+						}
 
 						name="";value="";
 						featurepairs.clear();
@@ -353,7 +360,7 @@ public class GateMapper extends PepperMapperImpl
   	    InputSource is = getInputSource(reader,encoding);
   	    saxParser.parse(is, handler);
 		
-		} catch (Exception e){logger.error("XML-Parser Error: "+ e);}
+		} catch (Exception e){logger.error("XML-Parser Error: ", e);}
 		
 		setProgress(1.0);
 		
