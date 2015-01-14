@@ -1,0 +1,8 @@
+<pepper>
+	<importer name="GATEImporter" path="./gate"/>
+<!--
+	<exporter name="RelANNISExporter" path="./relANNIS"/>
+-->
+	<exporter name="DOTExporter" path="./dot"/>
+
+</pepper>
