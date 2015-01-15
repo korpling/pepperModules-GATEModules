@@ -26,10 +26,7 @@ import org.slf4j.LoggerFactory;
 import de.hu_berlin.german.korpling.saltnpepper.pepper.common.DOCUMENT_STATUS;
 import de.hu_berlin.german.korpling.saltnpepper.pepper.modules.impl.PepperMapperImpl;
 import de.hu_berlin.german.korpling.saltnpepper.salt.SaltFactory;
-import de.hu_berlin.german.korpling.saltnpepper.salt.saltCommon.sDocumentStructure.SPointingRelation;
 import de.hu_berlin.german.korpling.saltnpepper.salt.saltCommon.sDocumentStructure.SSpan;
-import de.hu_berlin.german.korpling.saltnpepper.salt.saltCommon.sDocumentStructure.SStructure;
-import de.hu_berlin.german.korpling.saltnpepper.salt.saltCommon.sDocumentStructure.STYPE_NAME;
 import de.hu_berlin.german.korpling.saltnpepper.salt.saltCommon.sDocumentStructure.STextualDS;
 import de.hu_berlin.german.korpling.saltnpepper.salt.saltCommon.sDocumentStructure.SToken;
 
@@ -82,14 +79,13 @@ public class GateMapper extends PepperMapperImpl
 	public static final String Feature_TAG = "Feature";
 
 	/**
-	 * TODO Does GATE provide Corpus information?
+	 * Corpus information
 	 */
 	@Override
 	public DOCUMENT_STATUS mapSCorpus()
 	{
 		// getScorpus() returns the current corpus object.
 		//getSCorpus().createSMetaAnnotation(null, "date", "1989-12-17");
-
 		return (DOCUMENT_STATUS.COMPLETED);
 	}
 	
@@ -108,15 +104,9 @@ public class GateMapper extends PepperMapperImpl
 	}
 	
 	/**
-	 * Parses GATE XML-Document V3 with SAX-Parser
-	 * time O(n)
-	 * space k+2l+m+n O(k+l+n) k=text l=annotations m=metadata n=salt representation
-	 * lazy space complex definition:
+	 * Parses GATE XML-Document V2/3 with SAX-Parser
+	 * Salt representation is constructed successive
 	 * annotations are divided into nodes and spans with informations
-	 * nodes can't be greater than the text+1 and are stored (2l)
-	 * spans and informations are only stored (l)
-	 * 
-	 * salt representation constructed successive and includes all above given information (k+l+m)
 	 */
 	@Override
 	public DOCUMENT_STATUS mapSDocument()
@@ -143,7 +133,7 @@ public class GateMapper extends PepperMapperImpl
 				boolean bname=false,bvalue = false;
 				boolean bgatedocfeat = false;
 				boolean banno = false;
-				// TODO wo den AS namen unterbringen?
+				// TODO AS name not mapped
 				String as_name="";
 				String nodeID="";
 
@@ -190,7 +180,7 @@ public class GateMapper extends PepperMapperImpl
 									a_start=Integer.parseInt(attributes.getValue(i).trim());
 								} catch (NumberFormatException e)
 								{
-									logger.error("NumberFormatException in Annotation "+a_name+" at: "+attributes.getValue(i));
+									logger.error("NumberFormatException in Annotation {} at: {}",a_name,attributes.getValue(i));
 								}
 							} 
 							else if (EndNode_TAG.equals(attributes.getQName(i)))
@@ -200,7 +190,7 @@ public class GateMapper extends PepperMapperImpl
 									a_end=Integer.parseInt(attributes.getValue(i).trim());
 								} catch (NumberFormatException e)
 								{
-									logger.error("NumberFormatException in Annotation "+a_name+" at: "+attributes.getValue(i));
+									logger.error("NumberFormatException in Annotation {} at: {}",a_name,attributes.getValue(i));
 								}
 							} 
 						}
@@ -209,9 +199,9 @@ public class GateMapper extends PepperMapperImpl
 					{
 						if ("version".equals(attributes.getQName(0)))
 						{
-							if (!"3".equals(attributes.getValue(0)) | !"2".equals(attributes.getValue(0)))
+							if (!("3".equals(attributes.getValue(0)) | "2".equals(attributes.getValue(0))))
 							{
-								logger.warn("This Module works for GATE_Document Version 2 or 3. Anyway still trying...");
+								logger.warn("This Importer covers GATE_Document Version 2 and 3. Anyway still trying...");
 							}
 						}
 						addProgress(0.05);
@@ -220,11 +210,11 @@ public class GateMapper extends PepperMapperImpl
 					{
 
 						if(attributes.getLength()>0){nodeID = attributes.getValue(0).trim();}
-						else{logger.error("Node has no attribute");	}
+						else{logger.error("Node {} has no attribute",nodeID);	}
 						
 						try	{nodeIDs.add(Integer.parseInt(nodeID));}
 						catch (NumberFormatException e)	
-						{logger.error("NumberFormatException at Node: "+attributes.getValue(0));}
+						{logger.error("NumberFormatException at Node: {}",attributes.getValue(0));}
 					}
 					else if (Name_TAG.equals(qName))
 					{
@@ -312,13 +302,16 @@ public class GateMapper extends PepperMapperImpl
 					{
 						if(name!="" & value!="")
 						{
-							if(bgatedocfeat)
+							if(bgatedocfeat) //add documents meta information
 							{
-								getSDocument().createSMetaAnnotation(null, name, value);
+								if(!"gate.SourceURL".equals(name))
+								{
+									getSDocument().createSMetaAnnotation(null, name, value);
+								}
 							}
-							else
+							else //GATE Features from Annotation for the text in the bar
 							{
-								featurepairs.add(name+":"+value); //GATE Features from Annotation for the text in the bar
+								featurepairs.add(name+":"+value);
 							}
 							name="";
 							value="";

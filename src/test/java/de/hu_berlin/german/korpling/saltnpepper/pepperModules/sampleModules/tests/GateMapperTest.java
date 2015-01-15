@@ -17,6 +17,8 @@
  */
 package de.hu_berlin.german.korpling.saltnpepper.pepperModules.sampleModules.tests;
 
+import java.io.File;
+
 import org.eclipse.emf.common.util.URI;
 import org.junit.Before;
 import org.junit.Test;
@@ -49,11 +51,8 @@ public class GateMapperTest
 	@Test
 	public void testRun()
 	{
-		getFixture().setResourceURI(URI.createFileURI("/home/burzlafp/workspace/pepper-sampleModules/data/testdata/206new.xml"));
-		
+		getFixture().setResourceURI(URI.createFileURI(new File("").getAbsolutePath()+"/src/test/resources/sample1/gate/myCorpus/subCorpus/Sudebnik1497.xml".toString()));
 		getFixture().mapSDocument();
-		//assertEquals(49, getFixture().getSDocument().getSDocumentGraph().getSTokens().size());
-		assertEquals(1, 1);
 	}
 	
 }

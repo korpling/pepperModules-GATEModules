@@ -9,7 +9,7 @@
 </Feature>
 <Feature>
   <Name className="java.lang.String">gate.SourceURL</Name>
-  <Value className="java.lang.String">file:/C:/Users/yazhinou/Desktop/SUBJEKTE%20II/SHK/Aleksej/ODT%20und%20XML/sudebnik%201497/Sudebnik_1497_Shtamm_1955.xml</Value>
+  <Value className="java.lang.String">path</Value>
 </Feature>
 </GateDocumentFeatures>
 <!-- The document content area with serialized nodes -->
@@ -27,7 +27,7 @@
             <Node id="171"/>
             <Node id="184"/>
                <Node id="200"/>Editor<Node id="206"/>
-               <Node id="222"/>Aleksej Tikhonov<Node id="238"/>
+               <Node id="222"/>Aleksej Tikhonov,Uliana Yazhinova<Node id="238"/>
             <Node id="251"/>
             <Node id="264"/>
                <Node id="280"/>Responsible for digital corpus<Node id="310"/>

@@ -9,7 +9,7 @@
 </Feature>
 <Feature>
   <Name className="java.lang.String">gate.SourceURL</Name>
-  <Value className="java.lang.String">file:/home/pburz/Downloads/DFG/206.xml</Value>
+  <Value className="java.lang.String">path</Value>
 </Feature>
 </GateDocumentFeatures>
 <!-- The document content area with serialized nodes -->
