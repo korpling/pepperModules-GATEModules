@@ -36,7 +36,8 @@ public class GateImporter extends PepperImporterImpl implements PepperImporter
 	{
 		super();
 		this.setName("GateImporter");
-		this.addSupportedFormat("GateDocument", "2.0,3.0", null);
+		this.addSupportedFormat("GateDocument", "2.0", null);
+		this.addSupportedFormat("GateDocument", "3.0", null);
 		this.getSDocumentEndings().add(PepperModule.ENDING_XML);
 	}
 
