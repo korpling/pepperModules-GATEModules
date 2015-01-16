@@ -49,6 +49,11 @@ public class GateImporterTest extends PepperImporterTest{
 		formatDef.setFormatName("GateDocument");
 		formatDef.setFormatVersion("3.0");
 		this.supportedFormatsCheck.add(formatDef);
+		
+		formatDef= new FormatDesc();
+		formatDef.setFormatName("GateDocument");
+		formatDef.setFormatVersion("2.0");
+		this.supportedFormatsCheck.add(formatDef);
 	}
 
 	//TODO add further tests for any test cases you can think of and which are necessary
