@@ -238,7 +238,6 @@ public class GateMapper extends PepperMapperImpl
 						btext = false;
 						//generate Salttext
 						sText= getSDocument().getSDocumentGraph().createSTextualDS(text);
-						System.out.println(text);
 						text=null; //saving memory
 						//generate Salttokens
 						int pos=-1;
