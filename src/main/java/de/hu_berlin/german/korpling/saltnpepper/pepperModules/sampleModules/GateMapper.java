@@ -60,7 +60,7 @@ public class GateMapper extends PepperMapperImpl
 {
 	// this is a logger, for recording messages during program process, like debug messages
 	private static final Logger logger = LoggerFactory.getLogger(GateImporter.class);
-	protected String text;
+	protected String text="";
 	STextualDS sText= null; //Salttext
 	Map<Integer,SToken> tokenIDs = new HashMap<Integer,SToken>(); //GATE ID, correspond to the position in the text
 	List<Integer> nodeIDs=new ArrayList<Integer>(); //ID of the GATE Nodes, corresponding to the Start/EndNotes of the Annotations
@@ -238,8 +238,8 @@ public class GateMapper extends PepperMapperImpl
 						btext = false;
 						//generate Salttext
 						sText= getSDocument().getSDocumentGraph().createSTextualDS(text);
+						System.out.println(text);
 						text=null; //saving memory
-						
 						//generate Salttokens
 						int pos=-1;
 						for(Integer nodeID : nodeIDs)
