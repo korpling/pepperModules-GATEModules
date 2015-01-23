@@ -133,7 +133,6 @@ public class GateMapper extends PepperMapperImpl
 				boolean bname=false,bvalue = false;
 				boolean bgatedocfeat = false;
 				boolean banno = false;
-				// TODO AS name not mapped
 				String as_name="";
 				String nodeID="";
 
@@ -166,7 +165,6 @@ public class GateMapper extends PepperMapperImpl
 					else if (Annotation_TAG.equals(qName)) 
 					{
 						banno=true;
-
 						for(short i=0;i<attributes.getLength();i++)
 						{
 							if(Type_TAG.equals(attributes.getQName(i)))
@@ -260,37 +258,42 @@ public class GateMapper extends PepperMapperImpl
 					}
 					else if (Annotation_TAG.equals(qName)) 
 					{
-						//generate Spans with features as bar name
-						EList<SToken> token_set = new BasicEList<SToken>();
-						for(Integer ele : nodeIDs)
+						if(as_name.equals("Export")) //only convert the annotation set with the name Export
 						{
-							if(ele >= a_start & ele<=a_end) //filter EndNotes
+							//generate Spans with features as bar name
+							EList<SToken> token_set = new BasicEList<SToken>();
+							for(Integer ele : nodeIDs)
 							{
-								if(tokenIDs.containsKey(ele))
+								if(ele >= a_start & ele<=a_end) //filter EndNotes
 								{
-									token_set.add(tokenIDs.get(ele));
+									if(tokenIDs.containsKey(ele))
+									{
+										token_set.add(tokenIDs.get(ele));
+									}
 								}
+								if(ele>a_end){break;}
 							}
-							if(ele>a_end){break;}
-						}
-						String afeatures="";
-						if(featurepairs.isEmpty())
-						{
-							afeatures=a_name;
-						}
-						else
-						{
-							for(String ele : featurepairs)
+							
+							String afeatures="";
+							if(featurepairs.isEmpty())
 							{
-								afeatures+=ele+",";
+								afeatures=a_name;
 							}
-							afeatures=afeatures.substring(0, afeatures.length()-1);
-						}
-
-						if(token_set.size()>0) //in case token span is < 1
-						{
-							SSpan topic = getSDocument().getSDocumentGraph().createSSpan(token_set);
-							topic.createSAnnotation(null, a_name, afeatures);
+							else
+							{
+								for(String ele : featurepairs)
+								{
+									String tvalue=ele.split("#\\+#")[1];
+									afeatures+=tvalue+",";
+								}
+								afeatures=afeatures.substring(0, afeatures.length()-1); //del last ,
+							}
+	
+							if(token_set.size()>0) //in case token span is < 1
+							{
+								SSpan topic = getSDocument().getSDocumentGraph().createSSpan(token_set);
+								topic.createSAnnotation(null, a_name, afeatures);
+							}
 						}
 
 						name="";value="";
@@ -310,7 +313,7 @@ public class GateMapper extends PepperMapperImpl
 							}
 							else //GATE Features from Annotation for the text in the bar
 							{
-								featurepairs.add(name+":"+value);
+								featurepairs.add(name+"#+#"+value);
 							}
 							name="";
 							value="";
