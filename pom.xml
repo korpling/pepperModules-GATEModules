@@ -54,7 +54,11 @@
   </organization>
  
   <dependencies>
-    <!-- TODO /10/ ... put here all the dependencies you need, which are not already included in the parent project...-->
+    <dependency>
+	<groupId>uk.ac.gate</groupId>
+	<artifactId>gate-core</artifactId>
+	<version>8.0</version>
+</dependency>
   </dependencies>
   <build>
     <plugins>
