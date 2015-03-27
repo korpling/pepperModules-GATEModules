@@ -67,26 +67,21 @@ public class GateMapper extends PepperMapperImpl
 	public DOCUMENT_STATUS mapSDocument()
 	{
 		try {
-//			Gate.setPluginsHome(new File("/home/florian/test/GATE/gate-8.0-build4825-ALL/plugins/"));
-			System.setProperty("gate.home", "/home/florian/test/GATE/testGATE/");
-			Gate.init();
-//			Gate.initCreoleRegister();
-		} catch (GateException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
-		}
-		
-		try {
 			URL u = new URL(getResourceURI().toString()); 
 			FeatureMap params = Factory.newFeatureMap();
-//			URL u = new URL("http://gate.ac.uk/hamish/"); 
-//			FeatureMap params = Factory.newFeatureMap(); 
 			params.put("sourceUrl", u); 
 			setGateDocument((Document) Factory.createResource(DocumentImpl.class.getName(), params));
 		} catch (ResourceInstantiationException | MalformedURLException e) {
 			throw new PepperModuleException(this, "Cannot map document '"+getSDocument().getId()+"' because of a nested exception. ", e);
 		} 
 		GATE2Salt mapper= new GATE2Salt();
+		
+		mapper.setIgnoreWhitespaceTokens(((GATEImporterProperties)getProperties()).getIgnoreWhitespaces());
+		mapper.setMapDefaultAnnotationSet(((GATEImporterProperties)getProperties()).getMapDefaultAnnoSet());
+		mapper.setMapAnnotationSetNames(((GATEImporterProperties)getProperties()).getMapAnnotationSetNames());
+		mapper.setTypeAsPrefix(((GATEImporterProperties)getProperties()).getTypeAsPrefix());
+		mapper.setUseAsToken(((GATEImporterProperties)getProperties()).getUseAsToken());
+		
 		mapper.setGateDocument(getGateDocument());
 		mapper.setsDocument(getSDocument());
 		mapper.map();

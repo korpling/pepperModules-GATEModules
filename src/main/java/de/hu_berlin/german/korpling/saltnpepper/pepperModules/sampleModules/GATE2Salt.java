@@ -1,26 +1,18 @@
 package de.hu_berlin.german.korpling.saltnpepper.pepperModules.sampleModules;
 
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.util.List;
-import java.util.TreeMap;
-import java.util.TreeSet;
-
 import gate.Annotation;
 import gate.AnnotationSet;
 import gate.Document;
-import gate.Factory;
-import gate.FeatureMap;
 import gate.annotation.AnnotationSetImpl;
-import gate.creole.ResourceInstantiationException;
 import gate.util.InvalidOffsetException;
+
+import java.util.TreeSet;
 
 import org.eclipse.emf.common.util.BasicEList;
 import org.eclipse.emf.common.util.EList;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import de.hu_berlin.german.korpling.saltnpepper.pepper.modules.exceptions.PepperModuleException;
 import de.hu_berlin.german.korpling.saltnpepper.salt.SaltFactory;
 import de.hu_berlin.german.korpling.saltnpepper.salt.saltCommon.sCorpusStructure.SDocument;
 import de.hu_berlin.german.korpling.saltnpepper.salt.saltCommon.sDocumentStructure.SDataSourceSequence;
@@ -60,18 +52,42 @@ public class GATE2Salt {
 	 */
 	private boolean ignoreWhitespaceTokens= true;
 	
+	public boolean isIgnoreWhitespaceTokens() {
+		return ignoreWhitespaceTokens;
+	}
+
+	public void setIgnoreWhitespaceTokens(boolean ignoreWhitespaceTokens) {
+		this.ignoreWhitespaceTokens = ignoreWhitespaceTokens;
+	}
+
 	/**
 	 * Determines whether the annotations contained in the default annotation set 
 	 * (the annotation set without a name) should be mapped.
 	 */
 	private boolean mapDefaultAnnotationSet= true;
 	
+	public boolean isMapDefaultAnnotationSet() {
+		return mapDefaultAnnotationSet;
+	}
+
+	public void setMapDefaultAnnotationSet(boolean mapDefaultAnnotationSet) {
+		this.mapDefaultAnnotationSet = mapDefaultAnnotationSet;
+	}
+
 	/**
 	 * Determines an inclusive list of all annotation set names to be mapped. If this array is null, all
 	 * annotations are mapped.
 	 */
 	private String[] mapAnnotationSetNames= null;
 	
+	public String[] getMapAnnotationSetNames() {
+		return mapAnnotationSetNames;
+	}
+
+	public void setMapAnnotationSetNames(String[] mapAnnotationSetNames) {
+		this.mapAnnotationSetNames = mapAnnotationSetNames;
+	}
+
 	/**
 	 * Determines whether the type of an annotation is used as a prefix for each feature. For instance a
 	 * feature 'pos=VVFin' comming from annotation with type 'myTok' is mapped to 'myTok_pos=VVFin' when 
@@ -79,7 +95,28 @@ public class GATE2Salt {
 	 */
 	private boolean typeAsPrefix= true; 
 	
+	public boolean isTypeAsPrefix() {
+		return typeAsPrefix;
+	}
+
+	public void setTypeAsPrefix(boolean typeAsPrefix) {
+		this.typeAsPrefix = typeAsPrefix;
+	}
+
+	/**
+	 * Determines a type and an annotation name to be used for creating the tokenization.
+	 * The syntax is:<code>ANNOS_SET_NAME:TYPE</code>
+	 */
+	private String useAsToken=null;
 	
+	public String getUseAsToken() {
+		return useAsToken;
+	}
+
+	public void setUseAsToken(String useAsToken) {
+		this.useAsToken = useAsToken;
+	}
+
 	public SDocument map(){
 		if (getsDocument()== null){
 			setsDocument(SaltFactory.eINSTANCE.createSDocument());
@@ -95,56 +132,28 @@ public class GATE2Salt {
 				getsDocument().createSMetaAnnotation(null, key.toString(), value.toString());
 			}
 		}
-		
-		// create an annotation set containing all annotations (named annotation sets and default annotation set)
-		AnnotationSet allAnnos= new AnnotationSetImpl(getGateDocument().getAnnotations()); 
-		for (String annoName: getGateDocument().getAnnotationSetNames()){
-			allAnnos.addAll(getGateDocument().getAnnotations(annoName));
-		}
-		
+			
 		String primText= getGateDocument().getContent().toString();
 		if (	(primText!= null)&&
 				(!primText.isEmpty())){
 			//map primary text
 			STextualDS sText= getsDocument().getSDocumentGraph().createSTextualDS(primText);
-			
-			TreeSet<Long> allOffsets= new TreeSet<Long>();
-			
-			// iterate through all default annotations 
-			for (Annotation anno: allAnnos){
-				allOffsets.add(anno.getStartNode().getOffset());
-				allOffsets.add(anno.getEndNode().getOffset());
-			}
-			
-			// create all tokens
-			Long lastOffset= null;
-			for (Long offset: allOffsets){
-				if (lastOffset!= null){
-					if (!ignoreWhitespaceTokens){
-						// create token for each interval, even if the contained text is a whitespace
-						
-						getsDocument().getSDocumentGraph().createSToken(sText, lastOffset.intValue(), offset.intValue());
-					}else{
-						// only create tokens for non empty texts and annotated empty texts
-						
-						getsDocument().getSDocumentGraph().createSToken(sText, lastOffset.intValue(), offset.intValue());
-						String text;
-						try {
-							text = getGateDocument().getContent().getContent(lastOffset, offset).toString();
-							if (text.trim().isEmpty()){
-								if (!allAnnos.getContained(lastOffset, offset).isEmpty()){
-									//create empty token
-									getsDocument().getSDocumentGraph().createSToken(sText, lastOffset.intValue(), offset.intValue());
-								};
-							}
-						} catch (InvalidOffsetException e) {
-							//do nothing ;
-						}
-
-					}
-					
+			boolean mapDefault= true;
+			if (	(useAsToken!= null)&&
+					(!useAsToken.isEmpty())){
+				String[] parts= useAsToken.split(":");
+				if (parts.length== 2){
+					mapTokenization(sText, parts[0], parts[1]);
+					mapDefault= false;
+				}else if (parts.length== 1){ 
+					mapTokenization(sText, null, useAsToken);
+					mapDefault= false;
+				}else{
+					logger.warn("There is an syntax error in passed value to detect the token annotation '"+useAsToken+"'. It must match 'ANNOS_SET_NAME:TYPE'.");
 				}
-				lastOffset= offset;
+			}
+			if (mapDefault){
+				mapTokenizationDefault(sText);
 			}
 			
 			if (mapDefaultAnnotationSet){
@@ -158,6 +167,67 @@ public class GATE2Salt {
 			}	
 		}
 		return(getsDocument());
+	}
+	
+	private void mapTokenization(STextualDS sText, String annoSetName, String type){
+		AnnotationSet annoSet= null;
+		if (	(annoSetName== null)||
+				(annoSetName.isEmpty())){
+			annoSet= getGateDocument().getAnnotations();
+		}else{
+			annoSet= getGateDocument().getAnnotations(annoSetName);
+		}
+		for (Annotation anno: annoSet){
+			if (type.equals(anno.getType())){
+				//annotation for token found
+				
+				getsDocument().getSDocumentGraph().createSToken(sText, anno.getStartNode().getOffset().intValue(), anno.getEndNode().getOffset().intValue());
+			}
+		}
+	}
+	
+	private void mapTokenizationDefault(STextualDS sText){
+		// create an annotation set containing all annotations (named annotation sets and default annotation set)
+		AnnotationSet allAnnos= new AnnotationSetImpl(getGateDocument().getAnnotations()); 
+		for (String annoName: getGateDocument().getAnnotationSetNames()){
+			allAnnos.addAll(getGateDocument().getAnnotations(annoName));
+		}
+		
+		// create all tokens
+		TreeSet<Long> allOffsets= new TreeSet<Long>();
+		// iterate through all default annotations 
+		for (Annotation anno: allAnnos){
+			allOffsets.add(anno.getStartNode().getOffset());
+			allOffsets.add(anno.getEndNode().getOffset());
+		}
+		Long lastOffset= null;
+		for (Long offset: allOffsets){
+			if (lastOffset!= null){
+				if (!ignoreWhitespaceTokens){
+					// create token for each interval, even if the contained text is a whitespace
+					
+					getsDocument().getSDocumentGraph().createSToken(sText, lastOffset.intValue(), offset.intValue());
+				}else{
+					// only create tokens for non empty texts and annotated empty texts
+					
+					getsDocument().getSDocumentGraph().createSToken(sText, lastOffset.intValue(), offset.intValue());
+					String text;
+					try {
+						text = getGateDocument().getContent().getContent(lastOffset, offset).toString();
+						if (text.trim().isEmpty()){
+							if (!allAnnos.getContained(lastOffset, offset).isEmpty()){
+								//create empty token
+								getsDocument().getSDocumentGraph().createSToken(sText, lastOffset.intValue(), offset.intValue());
+							};
+						}
+					} catch (InvalidOffsetException e) {
+						//do nothing ;
+					}
+
+				}
+			}
+			lastOffset= offset;
+		}
 	}
 	
 	private void mapAnnotationSet(STextualDS sText, AnnotationSet annoSet, String annoSetName){
@@ -218,7 +288,7 @@ public class GATE2Salt {
 					}
 				}
 			}
-			sLayer.getSNodes().addAll(spans);
+//			sLayer.getSNodes().addAll(spans);
 		}
 	}
 }
