@@ -232,44 +232,39 @@ public class GateMapper extends PepperMapperImpl {
 											// better to give some feedback to
 											// the user
 					} else if (Annotation_TAG.equals(qName)) {
-						if (as_name.equals("Export")) // only convert the
-														// annotation set with
-														// the name Export
-						{
-							// generate Spans with features as bar name
-							EList<SToken> token_set = new BasicEList<SToken>();
-							for (Integer ele : nodeIDs) {
-								if (ele >= a_start & ele <= a_end) // filter
-																	// EndNotes
-								{
-									if (tokenIDs.containsKey(ele)) {
-										token_set.add(tokenIDs.get(ele));
-									}
-								}
-								if (ele > a_end) {
-									break;
-								}
-							}
-
-							String afeatures = "";
-							if (featurepairs.isEmpty()) {
-								afeatures = a_name;
-							} else {
-								for (String ele : featurepairs) {
-									String tvalue = ele.split("#\\+#")[1];
-									afeatures += tvalue + ",";
-								}
-								afeatures = afeatures.substring(0, afeatures.length() - 1); // del
-																							// last
-																							// ,
-							}
-
-							if (token_set.size() > 0) // in case token span is <
-														// 1
+						// generate Spans with features as bar name
+						EList<SToken> token_set = new BasicEList<SToken>();
+						for (Integer ele : nodeIDs) {
+							if (ele >= a_start & ele <= a_end) // filter
+																// EndNotes
 							{
-								SSpan topic = getSDocument().getSDocumentGraph().createSSpan(token_set);
-								topic.createSAnnotation(null, a_name, afeatures);
+								if (tokenIDs.containsKey(ele)) {
+									token_set.add(tokenIDs.get(ele));
+								}
 							}
+							if (ele > a_end) {
+								break;
+							}
+						}
+
+						String afeatures = "";
+						if (featurepairs.isEmpty()) {
+							afeatures = a_name;
+						} else {
+							for (String ele : featurepairs) {
+								String tvalue = ele.split("#\\+#")[1];
+								afeatures += tvalue + ",";
+							}
+							afeatures = afeatures.substring(0, afeatures.length() - 1); // del
+																						// last
+																						// ,
+						}
+
+						if (token_set.size() > 0) // in case token span is <
+													// 1
+						{
+							SSpan topic = getSDocument().getSDocumentGraph().createSSpan(token_set);
+							topic.createSAnnotation(null, a_name, afeatures);
 						}
 
 						name = "";
