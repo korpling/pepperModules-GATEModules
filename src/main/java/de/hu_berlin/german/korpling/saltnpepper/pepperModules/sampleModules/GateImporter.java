@@ -30,10 +30,8 @@ import de.hu_berlin.german.korpling.saltnpepper.pepper.modules.impl.PepperImport
 import de.hu_berlin.german.korpling.saltnpepper.salt.saltCore.SElementId;
 
 @Component(name = "GATEImporterComponent", factory = "PepperImporterComponentFactory")
-public class GateImporter extends PepperImporterImpl implements PepperImporter
-{
-	public GateImporter()
-	{
+public class GateImporter extends PepperImporterImpl implements PepperImporter {
+	public GateImporter() {
 		super();
 		this.setName("GateImporter");
 		this.addSupportedFormat("GateDocument", "2.0", null);
@@ -42,24 +40,20 @@ public class GateImporter extends PepperImporterImpl implements PepperImporter
 	}
 
 	@Override
-	public PepperMapper createPepperMapper(SElementId sElementId)
-	{
+	public PepperMapper createPepperMapper(SElementId sElementId) {
 		GateMapper mapper = new GateMapper();
 		mapper.setResourceURI(getSElementId2ResourceTable().get(sElementId));
 		return (mapper);
 	}
 
-
 	@Override
-	public Double isImportable(URI corpusPath)
-	{
+	public Double isImportable(URI corpusPath) {
 		// some code to analyze the given corpus-structure
 		return (null);
 	}
 
 	@Override
-	public boolean isReadyToStart() throws PepperModuleNotReadyException
-	{
+	public boolean isReadyToStart() throws PepperModuleNotReadyException {
 		// make some initializations if necessary
 		return (super.isReadyToStart());
 	}

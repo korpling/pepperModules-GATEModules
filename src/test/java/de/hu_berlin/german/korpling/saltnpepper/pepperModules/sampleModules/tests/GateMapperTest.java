@@ -27,32 +27,28 @@ import static org.junit.Assert.*;
 import de.hu_berlin.german.korpling.saltnpepper.pepperModules.sampleModules.GateMapper;
 import de.hu_berlin.german.korpling.saltnpepper.salt.SaltFactory;
 
-public class GateMapperTest
-{
-	private GateMapper fixture=null;
+public class GateMapperTest {
+	private GateMapper fixture = null;
 
-	public GateMapper getFixture()
-	{
+	public GateMapper getFixture() {
 		return fixture;
 	}
 
-	public void setFixture(GateMapper fixture)
-	{
+	public void setFixture(GateMapper fixture) {
 		this.fixture = fixture;
-		
+
 	}
+
 	@Before
-	public void setUp()
-	{
+	public void setUp() {
 		setFixture(new GateMapper());
 		getFixture().setSDocument(SaltFactory.eINSTANCE.createSDocument());
 	}
-	
+
 	@Test
-	public void testRun()
-	{
-		getFixture().setResourceURI(URI.createFileURI(new File("").getAbsolutePath()+"/src/test/resources/sample1/gate/myCorpus/subCorpus/Sudebnik1497.xml".toString()));
+	public void testRun() {
+		getFixture().setResourceURI(URI.createFileURI(new File("").getAbsolutePath() + "/src/test/resources/sample1/gate/myCorpus/subCorpus/Sudebnik1497.xml".toString()));
 		getFixture().mapSDocument();
 	}
-	
+
 }
