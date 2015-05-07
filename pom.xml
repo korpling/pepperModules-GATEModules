@@ -52,4 +52,9 @@
   <organization>
   	<name>Humboldt-Universität zu Berlin</name>
   </organization>
+  <scm>
+  	<connection>scm:git:git://github.com/korpling/pepperModules-GATEModules.git</connection>
+    <developerConnection>scm:git:git@github.com:korpling/pepperModules-GATEModules.git</developerConnection>
+    <url>https://github.com/korpling/pepperModules-GATEModules</url>
+  </scm>
 </project>
