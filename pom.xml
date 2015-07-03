@@ -1,9 +1,8 @@
-<?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
-  <!-- TODO /1/: change the groupId to the name of your module and remove the comments, it is just outcommented for not producing warnings-->
-  <!-- <groupId></groupId> -->
-  <!-- TODO /2/: change the artifactId to the name of your module -->
+  
+  
+  
   <artifactId>pepperModules-GATEModules</artifactId>
   <version>1.0.1-SNAPSHOT</version>
   <name>${project.groupId}.${project.artifactId}</name>
@@ -22,7 +21,7 @@
       <id>korpling</id>
       <name>korpling maven repo</name>
       <url>file:///srv/www/maven2/</url>
-      <!-- <url>scpexe://korpling.german.hu-berlin.de/srv/www/maven2/</url>-->
+      
     </repository>
   </distributionManagement>
   <repositories>
@@ -32,12 +31,11 @@
       <url>http://korpling.german.hu-berlin.de/maven2</url>
     </repository>
   </repositories>
-  <!-- 	Declares this project to be an extension of the project pepper-parentModule. The parent project for instance contains all dependencies 
-		necessary for using the SaltNPepper environment (all Pepper projects and all Salt projects).-->
+  
   <parent>
     <groupId>de.hu_berlin.german.korpling.saltnpepper</groupId>
     <artifactId>pepper-parentModule</artifactId>
-    <version>2.1.0</version>
+    <version>2.1.2-SNAPSHOT</version>
   </parent>
   <description>This project provides three sample modules for Pepper. It provides an importer, an exporter and a manipulator. The project can be used as a container for creating new PepperModules. One just have to override the areas marked with TODO.</description>
   <issueManagement>
@@ -50,7 +48,7 @@
   </ciManagement>
   <inceptionYear>2014</inceptionYear>
   <organization>
-  	<name>Humboldt-Universität zu Berlin</name>
+  	<name>Humboldt-Universit&#228;t zu Berlin</name>
   </organization>
   <scm>
   	<connection>scm:git:git://github.com/korpling/pepperModules-GATEModules.git</connection>
