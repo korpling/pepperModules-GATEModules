@@ -4,7 +4,7 @@
   
   
   <artifactId>pepperModules-GATEModules</artifactId>
-  <version>1.0.1-SNAPSHOT</version>
+  <version>1.0.1</version>
   <name>${project.groupId}.${project.artifactId}</name>
   <packaging>bundle</packaging>
   <properties>
@@ -48,7 +48,7 @@
   </ciManagement>
   <inceptionYear>2014</inceptionYear>
   <organization>
-  	<name>Humboldt-Universit&#228;t zu Berlin</name>
+  	<name>Humboldt-Universität zu Berlin</name>
   </organization>
   <scm>
   	<connection>scm:git:git://github.com/korpling/pepperModules-GATEModules.git</connection>
