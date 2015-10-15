@@ -59,10 +59,11 @@ public class GateMapper extends PepperMapperImpl {
 	private static final Logger logger = LoggerFactory.getLogger(GateImporter.class);
 	protected String text = "";
 	STextualDS sText = null; // Salttext
-	Map<Integer, SToken> tokenIDs = new HashMap<Integer, SToken>(); 
-	// GATE ID,  correspond to the position in the text
-	List<Integer> nodeIDs = new ArrayList<Integer>(); 
-	// ID of the GATE Nodes, corresponding to the Start/EndNotes of the Annotations
+	Map<Integer, SToken> tokenIDs = new HashMap<Integer, SToken>();
+	// GATE ID, correspond to the position in the text
+	List<Integer> nodeIDs = new ArrayList<Integer>();
+	// ID of the GATE Nodes, corresponding to the Start/EndNotes of the
+	// Annotations
 	public static final String TextWithNodes_TAG = "TextWithNodes";
 	public static final String AnnotationSet_TAG = "AnnotationSet";
 	public static final String Annotation_TAG = "Annotation";
@@ -217,8 +218,9 @@ public class GateMapper extends PepperMapperImpl {
 						addProgress(0.4);
 					} else if (AnnotationSet_TAG.equals(qName)) {
 						bas = false;
-						addProgress(0.05); 
-						// can have infinite amount of AS but better to give some feedback to the user
+						addProgress(0.05);
+						// can have infinite amount of AS but better to give
+						// some feedback to the user
 					} else if (Annotation_TAG.equals(qName)) {
 						// generate Spans with features as bar name
 						List<SToken> token_set = new ArrayList<>();
@@ -243,12 +245,12 @@ public class GateMapper extends PepperMapperImpl {
 								String tvalue = ele.split("#\\+#")[1];
 								afeatures += tvalue + ",";
 							}
-							afeatures = afeatures.substring(0, afeatures.length() - 1); 
+							afeatures = afeatures.substring(0, afeatures.length() - 1);
 							// del last ,
 						}
 
-						if (token_set.size() > 0) 
-							
+						if (token_set.size() > 0)
+
 						{
 							// in case token span is < 1
 							SSpan topic = getDocument().getDocumentGraph().createSpan(token_set);

@@ -27,7 +27,6 @@ import org.corpus_tools.salt.graph.Identifier;
 import org.eclipse.emf.common.util.URI;
 import org.osgi.service.component.annotations.Component;
 
-
 @Component(name = "GATEImporterComponent", factory = "PepperImporterComponentFactory")
 public class GateImporter extends PepperImporterImpl implements PepperImporter {
 	public GateImporter() {
