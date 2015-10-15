@@ -19,13 +19,12 @@ package de.hu_berlin.german.korpling.saltnpepper.pepperModules.sampleModules.tes
 
 import java.io.File;
 
+import org.corpus_tools.salt.SaltFactory;
 import org.eclipse.emf.common.util.URI;
 import org.junit.Before;
 import org.junit.Test;
 
-import static org.junit.Assert.*;
 import de.hu_berlin.german.korpling.saltnpepper.pepperModules.sampleModules.GateMapper;
-import de.hu_berlin.german.korpling.saltnpepper.salt.SaltFactory;
 
 public class GateMapperTest {
 	private GateMapper fixture = null;
@@ -42,7 +41,7 @@ public class GateMapperTest {
 	@Before
 	public void setUp() {
 		setFixture(new GateMapper());
-		getFixture().setSDocument(SaltFactory.eINSTANCE.createSDocument());
+		getFixture().setDocument(SaltFactory.createSDocument());
 	}
 
 	@Test

@@ -17,19 +17,6 @@
  */
 package de.hu_berlin.german.korpling.saltnpepper.pepperModules.sampleModules;
 
-import org.eclipse.emf.common.util.BasicEList;
-import org.eclipse.emf.common.util.EList;
-import org.eclipse.emf.common.util.URI;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import de.hu_berlin.german.korpling.saltnpepper.pepper.common.DOCUMENT_STATUS;
-import de.hu_berlin.german.korpling.saltnpepper.pepper.modules.impl.PepperMapperImpl;
-import de.hu_berlin.german.korpling.saltnpepper.salt.SaltFactory;
-import de.hu_berlin.german.korpling.saltnpepper.salt.saltCommon.sDocumentStructure.SSpan;
-import de.hu_berlin.german.korpling.saltnpepper.salt.saltCommon.sDocumentStructure.STextualDS;
-import de.hu_berlin.german.korpling.saltnpepper.salt.saltCommon.sDocumentStructure.SToken;
-
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.InputStream;
@@ -44,6 +31,15 @@ import java.util.Map;
 import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
 
+import org.corpus_tools.pepper.common.DOCUMENT_STATUS;
+import org.corpus_tools.pepper.impl.PepperMapperImpl;
+import org.corpus_tools.salt.SaltFactory;
+import org.corpus_tools.salt.common.SSpan;
+import org.corpus_tools.salt.common.STextualDS;
+import org.corpus_tools.salt.common.SToken;
+import org.eclipse.emf.common.util.URI;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.xml.sax.Attributes;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
@@ -63,17 +59,10 @@ public class GateMapper extends PepperMapperImpl {
 	private static final Logger logger = LoggerFactory.getLogger(GateImporter.class);
 	protected String text = "";
 	STextualDS sText = null; // Salttext
-	Map<Integer, SToken> tokenIDs = new HashMap<Integer, SToken>(); // GATE ID,
-																	// correspond
-																	// to the
-																	// position
-																	// in the
-																	// text
-	List<Integer> nodeIDs = new ArrayList<Integer>(); // ID of the GATE Nodes,
-														// corresponding to the
-														// Start/EndNotes of the
-														// Annotations
-
+	Map<Integer, SToken> tokenIDs = new HashMap<Integer, SToken>(); 
+	// GATE ID,  correspond to the position in the text
+	List<Integer> nodeIDs = new ArrayList<Integer>(); 
+	// ID of the GATE Nodes, corresponding to the Start/EndNotes of the Annotations
 	public static final String TextWithNodes_TAG = "TextWithNodes";
 	public static final String AnnotationSet_TAG = "AnnotationSet";
 	public static final String Annotation_TAG = "Annotation";
@@ -119,7 +108,7 @@ public class GateMapper extends PepperMapperImpl {
 
 		// the method getSDocument() returns the current document for creating
 		// the document-structure
-		getSDocument().setSDocumentGraph(SaltFactory.eINSTANCE.createSDocumentGraph());
+		getDocument().setDocumentGraph(SaltFactory.createSDocumentGraph());
 		// to get the exact resource, which be processed now, call
 		// getResources()
 		URI resource = getResourceURI();
@@ -213,14 +202,14 @@ public class GateMapper extends PepperMapperImpl {
 					if (TextWithNodes_TAG.equals(qName)) {
 						btext = false;
 						// generate Salttext
-						sText = getSDocument().getSDocumentGraph().createSTextualDS(text);
+						sText = getDocument().getDocumentGraph().createTextualDS(text);
 						text = null; // saving memory
 						// generate Salttokens
 						int pos = -1;
 						for (Integer nodeID : nodeIDs) {
 							int act_val = nodeID;
 							if (pos > -1) {
-								SToken token = getSDocument().getSDocumentGraph().createSToken(sText, pos, act_val);
+								SToken token = getDocument().getDocumentGraph().createToken(sText, pos, act_val);
 								tokenIDs.put(pos, token);
 							}
 							pos = act_val;
@@ -228,12 +217,11 @@ public class GateMapper extends PepperMapperImpl {
 						addProgress(0.4);
 					} else if (AnnotationSet_TAG.equals(qName)) {
 						bas = false;
-						addProgress(0.05); // can have infinite amount of AS but
-											// better to give some feedback to
-											// the user
+						addProgress(0.05); 
+						// can have infinite amount of AS but better to give some feedback to the user
 					} else if (Annotation_TAG.equals(qName)) {
 						// generate Spans with features as bar name
-						EList<SToken> token_set = new BasicEList<SToken>();
+						List<SToken> token_set = new ArrayList<>();
 						for (Integer ele : nodeIDs) {
 							if (ele >= a_start & ele <= a_end) // filter
 																// EndNotes
@@ -255,16 +243,16 @@ public class GateMapper extends PepperMapperImpl {
 								String tvalue = ele.split("#\\+#")[1];
 								afeatures += tvalue + ",";
 							}
-							afeatures = afeatures.substring(0, afeatures.length() - 1); // del
-																						// last
-																						// ,
+							afeatures = afeatures.substring(0, afeatures.length() - 1); 
+							// del last ,
 						}
 
-						if (token_set.size() > 0) // in case token span is <
-													// 1
+						if (token_set.size() > 0) 
+							
 						{
-							SSpan topic = getSDocument().getSDocumentGraph().createSSpan(token_set);
-							topic.createSAnnotation(null, a_name, afeatures);
+							// in case token span is < 1
+							SSpan topic = getDocument().getDocumentGraph().createSpan(token_set);
+							topic.createAnnotation(null, a_name, afeatures);
 						}
 
 						name = "";
@@ -276,7 +264,7 @@ public class GateMapper extends PepperMapperImpl {
 							if (bgatedocfeat) // add documents meta information
 							{
 								if (!"gate.SourceURL".equals(name)) {
-									getSDocument().createSMetaAnnotation(null, name, value);
+									getDocument().createMetaAnnotation(null, name, value);
 								}
 							} else // GATE Features from Annotation for the text
 									// in the bar
