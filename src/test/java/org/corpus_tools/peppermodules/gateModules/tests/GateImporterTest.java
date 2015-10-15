@@ -15,13 +15,12 @@
  *
  *
  */
-package de.hu_berlin.german.korpling.saltnpepper.pepperModules.sampleModules.tests;
+package org.corpus_tools.peppermodules.gateModules.tests;
 
 import org.corpus_tools.pepper.common.FormatDesc;
 import org.corpus_tools.pepper.testFramework.PepperImporterTest;
+import org.corpus_tools.peppermodules.gateModules.GateImporter;
 import org.junit.Before;
-
-import de.hu_berlin.german.korpling.saltnpepper.pepperModules.sampleModules.GateImporter;
 
 /**
  * This is a dummy implementation of a JUnit test for testing the

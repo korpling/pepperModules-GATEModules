@@ -15,16 +15,15 @@
  *
  *
  */
-package de.hu_berlin.german.korpling.saltnpepper.pepperModules.sampleModules.tests;
+package org.corpus_tools.peppermodules.gateModules.tests;
 
 import java.io.File;
 
+import org.corpus_tools.peppermodules.gateModules.GateMapper;
 import org.corpus_tools.salt.SaltFactory;
 import org.eclipse.emf.common.util.URI;
 import org.junit.Before;
 import org.junit.Test;
-
-import de.hu_berlin.german.korpling.saltnpepper.pepperModules.sampleModules.GateMapper;
 
 public class GateMapperTest {
 	private GateMapper fixture = null;

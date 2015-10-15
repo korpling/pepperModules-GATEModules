@@ -15,7 +15,7 @@
  *
  *
  */
-package de.hu_berlin.german.korpling.saltnpepper.pepperModules.sampleModules;
+package org.corpus_tools.peppermodules.gateModules;
 
 import java.io.File;
 import java.io.FileInputStream;
