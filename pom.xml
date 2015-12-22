@@ -6,7 +6,7 @@
 		<version>3.0.0</version>
 	</parent>
 	<artifactId>pepperModules-GATEModules</artifactId>
-	<version>1.0.2</version>
+	<version>1.0.3-SNAPSHOT</version>
 	<name>${project.groupId}.${project.artifactId}</name>
 	<url>https://github.com/korpling/pepperModules-GateApiModules</url>
 	<packaging>bundle</packaging>
@@ -27,6 +27,6 @@
 		<connection>scm:git:git://github.com/korpling/pepperModules-GATEModules.git</connection>
 		<developerConnection>scm:git:git@github.com:korpling/pepperModules-GATEModules.git</developerConnection>
 		<url>https://github.com/korpling/pepperModules-GATEModules</url>
-	  <tag>pepperModules-GATEModules-1.0.2</tag>
+	  <tag>HEAD</tag>
   </scm>
 </project>
