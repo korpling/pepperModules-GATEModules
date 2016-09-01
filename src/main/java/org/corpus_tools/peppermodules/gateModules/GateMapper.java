@@ -19,7 +19,6 @@ package org.corpus_tools.peppermodules.gateModules;
 
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
 import java.io.StringReader;
@@ -44,6 +43,8 @@ import org.xml.sax.Attributes;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 import org.xml.sax.helpers.DefaultHandler;
+
+import com.google.common.io.CountingInputStream;
 
 /**
  * This class is a GATE2Salt Mapper. It maps the GATE-XML Version 2 or 3 from
@@ -116,7 +117,12 @@ public class GateMapper extends PepperMapperImpl {
 		// we record, which file currently is imported to the debug stream
 		logger.debug("Importing the file {}.", resource);
 
-		try {
+		// TODO: encoding nicht hard codieren
+		String encoding = "UTF-8";
+		File file = new File(resource.toFileString());
+		final long fileSize = file.length();
+		
+		try(final CountingInputStream inputStream = new CountingInputStream(new FileInputStream(file))) {
 			SAXParserFactory factory = SAXParserFactory.newInstance();
 			SAXParser saxParser = factory.newSAXParser();
 
@@ -171,7 +177,7 @@ public class GateMapper extends PepperMapperImpl {
 								logger.warn("This Importer covers GATE_Document Version 2 and 3. Anyway still trying...");
 							}
 						}
-						addProgress(0.05);
+						//addProgress(0.05);
 					} else if (Node_TAG.equals(qName)) {
 
 						if (attributes.getLength() > 0) {
@@ -215,10 +221,10 @@ public class GateMapper extends PepperMapperImpl {
 							}
 							pos = act_val;
 						}
-						addProgress(0.4);
+						//addProgress(0.4);
 					} else if (AnnotationSet_TAG.equals(qName)) {
 						bas = false;
-						addProgress(0.05);
+						//addProgress(0.05);
 						// can have infinite amount of AS but better to give
 						// some feedback to the user
 					} else if (Annotation_TAG.equals(qName)) {
@@ -279,6 +285,9 @@ public class GateMapper extends PepperMapperImpl {
 					} else if (GateDocumentFeatures_TAG.equals(qName)) {
 						bgatedocfeat = false;
 					}
+					
+					// update progress based on file size
+					setProgress((double) inputStream.getCount() / (double) fileSize); 
 				}
 
 				public void characters(char ch[], int start, int length) throws SAXException {
@@ -296,10 +305,6 @@ public class GateMapper extends PepperMapperImpl {
 				}
 			};
 
-			// TODO: encoding nicht hard codieren
-			String encoding = "UTF-8";
-			File file = new File(resource.toFileString());
-			InputStream inputStream = new FileInputStream(file);
 			Reader reader = new InputStreamReader(inputStream, encoding);
 			InputSource is = getInputSource(reader, encoding);
 			saxParser.parse(is, handler);
