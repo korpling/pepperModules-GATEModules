@@ -2,3 +2,5 @@
 /target/
 /META-INF
 /data
+/.classpath
+/.settings
